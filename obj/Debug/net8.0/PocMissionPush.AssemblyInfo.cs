@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PocMissionPush")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("0.1.2.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.1.2+3f5bfa5138aa663e4227fe7670c9515b854a2ce5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.1.2+b0aaea323efb1bf6e270edaab001a4396f89ff6d")]
 [assembly: System.Reflection.AssemblyProductAttribute("PocMissionPush")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PocMissionPush")]
 [assembly: System.Reflection.AssemblyVersionAttribute("0.1.2.0")]

@@ -11,7 +11,9 @@ public class LoanRepository : ILoanRepository
 
     public Loan CreateLoan(Loan loan)
     {
-        throw new NotImplementedException();
+        _context.Loans.Add(loan);
+        _context.SaveChanges();
+        return loan;
     }
 
     public Loan DeleteLoan(int loanId)

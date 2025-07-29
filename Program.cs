@@ -28,6 +28,8 @@ builder.Services.AddScoped<PushService>();
 builder.Services.AddScoped<SubscriptionService>();
 builder.Services.AddScoped<WorkSessionService>();
 builder.Services.AddScoped<LoanService>();
+builder.Services.AddHttpClient<KeycloakAdminService>();
+
 
 JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
@@ -51,6 +53,8 @@ builder.Services.AddCors(options =>
     {
         builder.AllowAnyOrigin();
         builder.AllowAnyHeader();
+        builder.AllowAnyMethod();
+
     });
 });
 
@@ -87,7 +91,7 @@ static void LoadLoansFromCsv(string path, LoanDbContext context)
 
     using var reader = new StreamReader(path);
     // using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-    using var csv = new CsvReader(reader, new CsvHelper.Configuration.CsvConfiguration(CultureInfo.InvariantCulture)
+    using var csv = new CsvReader(reader, new CsvHelper.Configuration.CsvConfiguration(CultureInfo.GetCultureInfo("fr-FR"))
     {
         Delimiter = ";",
         TrimOptions = CsvHelper.Configuration.TrimOptions.Trim,
