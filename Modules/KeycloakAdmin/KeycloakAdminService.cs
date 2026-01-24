@@ -73,8 +73,22 @@ public class KeycloakAdminService
         var url = $"https://auth.ade-dev.fr/admin/realms/ustest/users/{id}";
 
         var payload = JsonSerializer.Serialize(new { enabled });
-        Console.WriteLine("request payload)");
-        Console.WriteLine(payload);
+        var request = new HttpRequestMessage(HttpMethod.Put, url);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        request.Content = new StringContent(payload, Encoding.UTF8, "application/json");
+
+        var response = await _httpClient.SendAsync(request);
+        var json = await response.Content.ReadAsStringAsync();
+
+        return json;
+    }
+
+    public async Task<string> SetEmailVerified(string id, bool emailVerified)
+    {
+        var token = await GetAccessTokenAsync();
+        var url = $"https://auth.ade-dev.fr/admin/realms/ustest/users/{id}";
+
+        var payload = JsonSerializer.Serialize(new { emailVerified });
         var request = new HttpRequestMessage(HttpMethod.Put, url);
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         request.Content = new StringContent(payload, Encoding.UTF8, "application/json");

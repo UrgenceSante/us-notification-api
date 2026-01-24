@@ -19,10 +19,17 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("{id}/enabled")]
-    public async Task<IActionResult> Put(string id, [FromBody] Boolean enabled)
+    public async Task<IActionResult> Put(string id, [FromBody] bool enabled)
     {
         Console.WriteLine(id);
         await _kc.SetUserEnabled(id, enabled);
         return Ok(enabled);
+    }
+
+    [HttpPut("{id}/emailVerified")]
+    public async Task<IActionResult> UpdateEmailVerified(string id, [FromBody] bool emailVerified)
+    {
+        await _kc.SetEmailVerified(id, emailVerified);
+        return Ok(emailVerified);
     }
 }
