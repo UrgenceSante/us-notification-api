@@ -9,4 +9,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/publish .
 COPY Data/LoanInitData.csv ./Data/LoanInitData.csv
-ENTRYPOINT ["dotnet", "PocMissionPush.dll"]
+ENTRYPOINT ["dotnet", "UsNotificationApi.dll"]

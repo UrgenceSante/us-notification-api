@@ -1,0 +1,11 @@
+@UsNotificationApi_HostAddress = http://localhost:5254
+
+GET {{UsNotificationApi_HostAddress}}/api/loans
+Accept: application/json
+
+###
+
+GET {{UsNotificationApi_HostAddress}}/api/subscription
+Accept: application/json
+
+###
