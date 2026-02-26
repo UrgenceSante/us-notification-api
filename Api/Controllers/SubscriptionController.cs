@@ -30,12 +30,12 @@ public class SubscriptionController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<ActionResult> DeleteSubscription(string endpoint)
+    public async Task<ActionResult> DeleteSubscription([FromBody] DeleteSubscriptionDTO dto)
     {
-        var existing = await _subscriptionService.GetSubscriptionByEndpoint(endpoint);
+        var existing = await _subscriptionService.GetSubscriptionByEndpoint(dto.Endpoint);
         if (existing is null) return NotFound();
 
-        await _subscriptionService.DeleteSubscription(endpoint);
+        await _subscriptionService.DeleteSubscription(dto.Endpoint);
         return NoContent();
     }
 }
