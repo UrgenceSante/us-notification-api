@@ -2,6 +2,8 @@ name: Build & Push Docker image
 
 on:
   push:
+    branches:
+      - master
     tags:
       - "v*"
 
@@ -18,15 +20,19 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract version from tag
-        id: version
-        run: echo "tag=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+      - name: Compute Docker tags
+        id: meta
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            VERSION="${GITHUB_REF_NAME#v}"
+            echo "tags=alexandredelesse/us-notification-api:${VERSION},alexandredelesse/us-notification-api:latest" >> $GITHUB_OUTPUT
+          else
+            echo "tags=alexandredelesse/us-notification-api:latest" >> $GITHUB_OUTPUT
+          fi
 
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: |
-            alexandredelesse/us-notification-api:${{ steps.version.outputs.tag }}
-            alexandredelesse/us-notification-api:latest
+          tags: ${{ steps.meta.outputs.tags }}
