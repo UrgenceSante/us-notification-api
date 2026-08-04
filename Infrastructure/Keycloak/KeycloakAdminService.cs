@@ -8,6 +8,8 @@ namespace UsNotificationApi.Infrastructure.Keycloak;
 
 public class KeycloakAdminService : IUserAdminService
 {
+    private const int UsersPageSize = 100;
+
     private readonly HttpClient _httpClient;
     private readonly IConfiguration _config;
 
@@ -47,19 +49,34 @@ public class KeycloakAdminService : IUserAdminService
     public async Task<List<KeycloakUser>> GetUsersAsync()
     {
         var token = await GetAccessTokenAsync();
-        var url = $"{_config["Keycloak:Authority"]}/admin/realms/{_config["Keycloak:Realm"]}/users";
+        var baseUrl = $"{_config["Keycloak:Authority"]}/admin/realms/{_config["Keycloak:Realm"]}/users";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var users = new List<KeycloakUser>();
+        var first = 0;
 
-        var response = await _httpClient.SendAsync(request);
-        response.EnsureSuccessStatusCode();
-
-        var json = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<List<KeycloakUser>>(json, new JsonSerializerOptions
+        while (true)
         {
-            PropertyNameCaseInsensitive = true
-        })!;
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{baseUrl}?first={first}&max={UsersPageSize}");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+            var page = JsonSerializer.Deserialize<List<KeycloakUser>>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            })!;
+
+            users.AddRange(page);
+
+            if (page.Count < UsersPageSize)
+                break;
+
+            first += UsersPageSize;
+        }
+
+        return users;
     }
 
     public async Task<string> SetUserEnabled(string id, bool enabled)
